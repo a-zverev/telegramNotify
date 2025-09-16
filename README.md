@@ -1,61 +1,60 @@
-# telegramNotify 📬
+# telegramNotify
 
-R-пакет для отправки уведомлений и файлов в Telegram при выполнении скриптов или функций.  
-Полезно для уведомлений об окончании долгих процессов в RStudio или на сервере.
+Tiny R package for sending Telegram notifications.
 
-## 🚀 Установка
-
-Установить напрямую из GitHub (нужен пакет `remotes`):
+## Installation
 
 ```r
-install.packages("remotes")
-remotes::install_github("alekseizverev/telegramNotify")
+# Install devtools if you don't have it
+install.packages("devtools")
+
+# Install from GitHub (after you upload it)
+devtools::install_github("a-zverev/telegramNotify")
 ```
 
-## ⚙️ Настройка
+Or install from tar.gz:
 
-В файл `~/.Renviron` добавь:
-
-```
-TELEGRAM_BOT_TOKEN=123456789:ABCdefGhIJKlmnoPQRstuVwxyZ
-TELEGRAM_CHAT_ID=987654321
+```r
+install.packages("telegramNotify_0.2.0.tar.gz", repos = NULL, type = "source")
 ```
 
-После изменения перезапусти R.
+## Setup
 
-## 🧪 Использование
+Create a new bot on BotFather. Send something to your bot. Get your `chat_id` from https://api.telegram.org/bot<YOUR_TOKEN>/getUpdates
 
-### Отправить сообщение
+Add your bot token and chat id to `~/.Renviron`:
+
+```
+TELEGRAM_BOT_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
+TELEGRAM_CHAT_ID=123456789
+```
+
+Then reload R or run `readRenviron("~/.Renviron")`.
+
+## Usage
+
 ```r
 library(telegramNotify)
 
-send_telegram_message("Привет из R! ✅")
-```
+# Send a message
+send_telegram_message("Hello from R!")
 
-### Отправить файл
-```r
-send_telegram_file("plot.png", caption = "Готовый график 📊")
-```
+# Send a JPG/PNG file, or convert other images to JPG before sending
+send_telegram_file("plot.png", caption = "My plot")
 
-### Выполнить код с уведомлением
-```r
-run_with_notify({
+# Run code with notification
+result <- run_with_notify({
   Sys.sleep(3)
-  log("abc")  # вызовет ошибку
-}, task_name = "Тестовый процесс")
+  2 + 2
+}, success_msg = "Computation finished!")
+
+# Run code with error notification only
+run_with_error_notify({
+  stop("Something went wrong")
+})
+
+# Decorator-like wrapper
+f <- function(x) { x + 1 }
+safe_f <- notify_on_error(f, notify_success = TRUE)
+safe_f(10)
 ```
-
-### Запустить функцию с уведомлениями
-```r
-slow_fun <- function(x) {
-  Sys.sleep(2)
-  sqrt(x)
-}
-
-safe_fun <- notify_on_error(slow_fun, task_name = "Квадратный корень", notify_success = TRUE)
-
-safe_fun(16)   # получишь сообщение в Telegram
-```
-
-## 📜 Лицензия
-MIT

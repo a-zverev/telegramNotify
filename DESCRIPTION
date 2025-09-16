@@ -1,12 +1,10 @@
 Package: telegramNotify
 Type: Package
-Title: Telegram Notifications for R Scripts
-Version: 0.1.0
-Author: Aleksei Zverev
-Maintainer: Aleksei Zverev <alexey@example.com>
-Description: Send Telegram messages, files, and notifications for R script execution.
-Depends: R (>= 3.5.0)
-Imports: httr
+Title: Telegram Notifications for R
+Version: 0.2.0
+Author: Your Name
+Maintainer: Your Name <your@email.com>
+Description: Minimal package to send Telegram notifications (messages and files) from R.
 License: MIT
 Encoding: UTF-8
 LazyData: true
